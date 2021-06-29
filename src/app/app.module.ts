@@ -6,6 +6,9 @@ import { AppComponent } from './app.component';
 import { BarComponent } from './bar/bar.component';
 import { PieComponent } from './pie/pie.component';
 import { ScatterComponent } from './scatter/scatter.component';
+import { LineChartComponent } from './line-chart/line-chart.component';
+import { FormsModule } from '@angular/forms';
+import { Char1Component } from './char1/char1.component';
 
 @NgModule({
   declarations: [
@@ -13,10 +16,13 @@ import { ScatterComponent } from './scatter/scatter.component';
     BarComponent,
     PieComponent,
     ScatterComponent,
+    LineChartComponent,
+    Char1Component,
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -57,12 +57,12 @@ export class LineChartComponent implements OnInit {
       this.x.domain(d3Array.extent(this.data, (d) => d.date ));
       this.y.domain(d3Array.extent(this.data, (d) => d.value ));
 
-    // Configure the X Axis
-    this.svg.append('g')
+      // Configure the X Axis
+      this.svg.append('g')
         .attr('transform', 'translate(0,' + this.height + ')')
         .call(d3Axis.axisBottom(this.x));
-    // Configure the Y Axis
-    this.svg.append('g')
+      // Configure the Y Axis
+      this.svg.append('g')
         .attr('class', 'axis axis--y')
         .call(d3Axis.axisLeft(this.y));
     }

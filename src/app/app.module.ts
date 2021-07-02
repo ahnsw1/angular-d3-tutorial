@@ -9,6 +9,7 @@ import { ScatterComponent } from './scatter/scatter.component';
 import { LineChartComponent } from './line-chart/line-chart.component';
 import { FormsModule } from '@angular/forms';
 import { Char1Component } from './char1/char1.component';
+import { RealtimeComponent } from './realtime/realtime.component';
 
 @NgModule({
   declarations: [
@@ -18,6 +19,7 @@ import { Char1Component } from './char1/char1.component';
     ScatterComponent,
     LineChartComponent,
     Char1Component,
+    RealtimeComponent,
   ],
   imports: [
     BrowserModule,

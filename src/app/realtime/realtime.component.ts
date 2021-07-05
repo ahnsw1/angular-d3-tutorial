@@ -29,6 +29,7 @@ export class RealtimeComponent implements OnInit {
     svg.append("svg").attr("width", chartWidth + focusChartMargin.left + focusChartMargin.right)
     .append("g").attr("transform", `translate(${focusChartMargin.left}, ${focusChartMargin.top})`)
 
+    //시간 형식 변경
     const parseTime = d3.timeParse("%H:%M");
 
     //x축 범위를 구하기 위해 모든 데이터를 묶기
@@ -67,7 +68,15 @@ export class RealtimeComponent implements OnInit {
     //zoom 빌드하기(focus 차트)
     //필터에 지정된 대로, 마우스가 초점 차트 위에 있는 동안 확대/축소 할 수 있다
     //마우스가 초점 차트 위에 있는 동안 두번 클릭하여 확대할 수 있다
-    const zoom = d3.zoom().scaleExtent([1, Infinity]).translateExtent([[0, 0], [chartWidth, focusChartHeight]]).extent([[0, 0], [chartWidth, focusChartHeight]]).on("zoom", zoomed).filter((event) => event.ctrlKey || event.type === "dblclick" || event.type === "mousedown");
+    const zoom = d3.zoom()
+      .scaleExtent([1, Infinity])
+      .translateExtent([[0, 0], [chartWidth, focusChartHeight]])
+      .extent([[0, 0], [chartWidth, focusChartHeight]])
+      .on("zoom", zoomed)
+      .filter(event => 
+        event.ctrlKey 
+        || event.type === "dblclick" 
+        || event.type === "mousedown");
 
     //line 만들기(focus, context 차트)
     const lineFocus = d3.line().x((d:any) => xFocus(parseTime(d.date))).y((d:any) => yFocus(d.conversion));

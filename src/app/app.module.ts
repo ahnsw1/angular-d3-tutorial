@@ -10,6 +10,10 @@ import { LineChartComponent } from './line-chart/line-chart.component';
 import { FormsModule } from '@angular/forms';
 import { Char1Component } from './char1/char1.component';
 import { RealtimeComponent } from './realtime/realtime.component';
+import { StreamComponent } from './stream/stream.component';
+import { BrushComponent } from './brush/brush.component';
+import { Brush2Component } from './brush2/brush2.component';
+import { Realtime2Component } from './realtime2/realtime2.component';
 
 @NgModule({
   declarations: [
@@ -20,6 +24,10 @@ import { RealtimeComponent } from './realtime/realtime.component';
     LineChartComponent,
     Char1Component,
     RealtimeComponent,
+    StreamComponent,
+    BrushComponent,
+    Brush2Component,
+    Realtime2Component
   ],
   imports: [
     BrowserModule,

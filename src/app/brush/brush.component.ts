@@ -32,9 +32,9 @@ export class BrushComponent implements OnInit {
 
     const circle = svg.append("g")
         .attr("fill-opacity", 0.2)
-      .selectAll("circle")
-      .data(Float64Array.from({length: 800}, rx))
-      .join("circle")
+        .selectAll("circle")
+        .data(Float64Array.from({length: 800}, rx))
+        .join("circle")
         .attr("transform", d => `translate(${x(d)},${ry()})`)
         .attr("r", 3.5);
 

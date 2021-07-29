@@ -1,0 +1,7 @@
+rect.selection {
+    position: absolute;
+}
+
+.context {
+    overflow: hidden;
+}

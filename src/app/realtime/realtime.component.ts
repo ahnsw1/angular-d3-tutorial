@@ -7,8 +7,8 @@ import * as d3 from 'd3';
   styleUrls: ['./realtime.component.css']
 })
 //Focus와 context를 사용하기 위해서 d3-zoom, d3-brush를 함께 사용한다.
-//focus차트는 줌이 일어나는 메인의 가장 큰 차트이다(설정한 영역을 보여주는 차트)
-//context차트는 차트의 전체 부분
+//focus차트는 줌이 일어나는 메인의 가장 큰 차트이다(설정한 영역을 보여주는 차트)(위에)
+//context차트는 차트의 전체 부분(밑에)
 export class RealtimeComponent implements OnInit {
   constructor() { }
 
@@ -20,8 +20,8 @@ export class RealtimeComponent implements OnInit {
     // const svg = d3.create('svg').attr('width', this.width).attr('height', this.height)
     
     //focus와 context 차트의 기본 설정(마진, 가로, 세로)
-    const focusChartMargin = { top: 20, right: 20, bottom: 170, left: 60};
-    const contextChartMargin = {top: 360, right: 20, bottom: 90, left: 60}; 
+    const focusChartMargin = { top: 20, right: 60, bottom: 170, left: 60};
+    const contextChartMargin = {top: 360, right: 60, bottom: 90, left: 60}; 
     const chartWidth = this.width - focusChartMargin.left - focusChartMargin.right;
     const focusChartHeight = this.height - focusChartMargin.top - focusChartMargin.bottom;
     const contextChartHeight = this.height - contextChartMargin.top - contextChartMargin.bottom;
@@ -108,10 +108,10 @@ export class RealtimeComponent implements OnInit {
       bucketNames.push(key);
     }
 
-    //key 별로 색깔 맞추기
+    //key 별로 색깔 맞추기: 다수개의 라인 생성
     const colors: any = d3.scaleOrdinal().domain(bucketNames).range(["#3498db", "#3cab4b", "#e74c3c", "#73169e", "#2ecc71"]);
-
-    //각 차트에 line 생성하기
+    
+    //각 차트에 line 생성하기: 다수개의 라인 생성
     for (let key of Object.keys(data)) {
       let bucket = data[key];
       focusChartLines.append("path").datum(bucket).attr("class", "line").attr("fill", "none").attr("stroke", d => colors(key)).attr("stroke-width", 1.5).attr("d", lineFocus);
@@ -130,34 +130,62 @@ export class RealtimeComponent implements OnInit {
       const x = e ? 1 : -1;
       const y = contextChartHeight + 10;
 
-      return `M${0.5 * x},${y}A6,6 0 0 ${e} ${6.5 * x}, ${y + 6}V${2 * y - 6}A6,6 0 0 ${e} ${0.5 * x}, ${2 * y}ZM${2.5 * x},${y + 8}V${2 * y - 8}M${4.5 * x},${y + 8}V${2 * y - 8}`;
+      return `
+      M ${0.5 * x} ${y}
+      A6,6 0 0 ${e} ${6.5 * x}, ${y + 6}
+      V ${2 * y - 6}
+      A6,6 0 0 ${e} ${0.5 * x}, ${2 * y}
+      Z
+      M ${2.5 * x} ${y + 8}
+      V ${2 * y - 8}
+      M ${4.5 * x} ${y + 8}
+      V ${2 * y - 8}
+      `;
     }
 
-    const brushHandle = contextBrush.selectAll(".handle--custom").data([{type: "w"}, {type: "e"}]).enter().append("path").attr("class", "handle--custom").attr("stroke", "#000").attr("cursor", "ew-resize").attr("d", brushHandlePath);
+    const brushHandle = contextBrush
+      .selectAll(".handle--custom")
+      .data([{type: "w"}, {type: "e"}]).enter()
+      .append("path")
+      .attr("class", "handle--custom")
+      .attr("stroke", "#000")
+      .attr("cursor", "ew-resize")
+      .attr("d", brushHandlePath);
 
     //focus 차트 상단에 확대/축소 영역 직사각형 중첩하기 overlay
-    svg.append("rect").attr("cursor", "move").attr("fill", "none").attr("pointer-events", "all").attr("class", "zoom").attr("width", chartWidth).attr("height", focusChartHeight).attr("transform", `translate(${focusChartMargin.left}, ${focusChartMargin.top})`).call(zoom);
+    svg.append("rect")
+        .attr("cursor", "move")
+        .attr("fill", "none")
+        .attr("pointer-events", "all")
+        .attr("class", "zoom")
+        .attr("width", chartWidth)
+        .attr("height", focusChartHeight)
+        .attr("transform", `translate(${focusChartMargin.left}, ${focusChartMargin.top})`)
+        .call(zoom);
 
     contextBrush.call(brush.move, [0, chartWidth / 2]);
 
     //focus 차트 x, y축 라벨
-    // focus.append("text").attr("transform", `translate(${chartWidth / 2}, ${focusChartHeight + focusChartMargin.top + 25})`).style("text-anchor", "middle").style("font-size", "18px").text("Time (UTC)");
-    // focus.append("text").attr("text-anchor", "middle").attr("transform", `translate(${-focusChartMargin.left + 20}, ${focusChartHeight / 2})rotate(-90)`).style("font-size", "18px").text("Conversion Rate");
+    focus.append("text").attr("transform", `translate(${chartWidth / 2}, ${focusChartHeight + focusChartMargin.top + 25})`).style("text-anchor", "middle").style("font-size", "18px").text("Time (UTC)");
+    focus.append("text").attr("text-anchor", "middle").attr("transform", `translate(${-focusChartMargin.left + 20}, ${focusChartHeight / 2})rotate(-90)`).style("font-size", "18px").text("Conversion Rate");
 
     function brushed(event) {
-      if (event.sourceEvent?.type === "zoom") return; // ignore brush-by-zoom
+      if (event.type === "zoom") {
+        return;
+      } // ignore brush-by-zoom
       var s = event.selection || xContext.range();
+      
       xFocus.domain(s.map(xContext.invert, xContext));
       focusChartLines.selectAll(".line").attr("d", lineFocus);
       focus.select(".x-axis").call(xAxisFocus);
       svg.select(".zoom").call(zoom.transform, d3.zoomIdentity.scale(chartWidth / (s[1] - s[0])).translate(-s[0], 0));
       brushHandle
-        .attr("display", null)
-        .attr("transform", (d, i) => "translate(" + [s[i], -contextChartHeight - 20] + ")");
+        // .attr("display", null)
+        .attr("transform", (d, i) => `translate(${[s[i], - contextChartHeight - 20]})`);
     }
 
     function zoomed(event) {
-      if (event.sourceEvent?.type === "brush") return; // ignore zoom-by-brush
+      if (event.type === "brush") return; // ignore zoom-by-brush
       var t = event.transform;
       xFocus.domain(t.rescaleX(xContext).domain());
       focusChartLines.selectAll(".line").attr("d", lineFocus);
@@ -165,8 +193,8 @@ export class RealtimeComponent implements OnInit {
       var brushSelection = xFocus.range().map(t.invertX, t);
       // context.select(".brush").call(brush.move, brushSelection);
       brushHandle
-        .attr("display", null)
-        .attr("transform", (d, i) => "translate(" + [brushSelection[i], -contextChartHeight - 20] + ")");
+        // .attr("display", null)
+        .attr("transform", (d, i) => `translate(${[brushSelection[i], - contextChartHeight - 20]})`);
     }
   }
 }

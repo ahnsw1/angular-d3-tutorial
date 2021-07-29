@@ -14,6 +14,8 @@ import { StreamComponent } from './stream/stream.component';
 import { BrushComponent } from './brush/brush.component';
 import { Brush2Component } from './brush2/brush2.component';
 import { Realtime2Component } from './realtime2/realtime2.component';
+import { Animation1Component } from './animation1/animation1.component';
+import { StreamingComponent } from './streaming/streaming.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +29,9 @@ import { Realtime2Component } from './realtime2/realtime2.component';
     StreamComponent,
     BrushComponent,
     Brush2Component,
-    Realtime2Component
+    Realtime2Component,
+    Animation1Component,
+    StreamingComponent
   ],
   imports: [
     BrowserModule,
